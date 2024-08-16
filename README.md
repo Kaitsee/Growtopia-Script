@@ -8,7 +8,10 @@
 ## Growpai Script :
 ### Free Script List:
   - Auto Find World Version 5.0
+  - Fast Roulette Spin
 ### VIP Script List:
+  - Auto Plants
+  - Auto Harvest
 
 ## Growlauncher Script List :
 ### Free Script List:
