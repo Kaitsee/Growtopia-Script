@@ -1,2 +1,4 @@
 Auto Find World : "https://raw.githubusercontent.com/Kaitsee/Growtopia-Script/main/Growpai/Auto%20Find%20World.lua?token=GHSAT0AAAAAACWFSY4JJKGX7MYBXSGJTGE6ZV7DTTQ"
 Growscan : "https://raw.githubusercontent.com/Kaitsee/Growtopia-Script/main/Growpai/Growscan.lua?token=GHSAT0AAAAAACWFSY4ICUQNJI57DCTSEP5UZV7DUOQ"
+
+Auto Plants : "https://raw.githubusercontent.com/Kaitsee/Growtopia-Script/main/Growpai/Auto%20Plants.lua?token=GHSAT0AAAAAACWFSY4IBP3MQLAVIBAXWYSEZV7ELCQ"
