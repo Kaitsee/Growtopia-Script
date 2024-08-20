@@ -476,20 +476,21 @@ function SystemVar(var)
         end
     end
 
-    RunThread(function()
+    pcall(function()
         while checkgems_status do
             if GetLocal().world ~= "EXIT" then
                 Local_Gems = GetLocal().gems
                 Sleep(1000)
-                    if Local_Gems ~= GetLocal().gems then
+                if Local_Gems ~= GetLocal().gems then
                     RunThread(function()
                         Sleep(500)
                         OnTalkBubble("`9Collected `2+" .. math.floor(GetLocal().gems - Local_Gems) .. " `9Gems (gems)")
+                        Local_Gems = GetLocal().gems
                     end)
                 end
             end
         end
-    end)
+end)
 end
 
 
