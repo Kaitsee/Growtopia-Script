@@ -161,7 +161,7 @@ end
 
 
 function proxymenu()
-    
+
 var = {}
 var[0] = "OnDialogRequest"
 var[1] = [[set_default_color|`o
@@ -505,4 +505,4 @@ AddCallback("System Proxy #2", "OnVarlist", SystemVar)
 OnConsoleMessage(systemlog .. "Proxy Injected")
 OnTextOverlay("`2Successfully Injected")
 
-spinchecker()
+SelectServer()
