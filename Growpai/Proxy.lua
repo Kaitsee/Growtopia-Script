@@ -504,5 +504,5 @@ Sleep(500)
 AddCallback("System Proxy #2", "OnVarlist", SystemVar)
 OnConsoleMessage(systemlog .. "Proxy Injected")
 OnTextOverlay("`2Successfully Injected")
-
+Sleep(1000)
 SelectServer()
