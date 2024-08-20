@@ -476,7 +476,7 @@ function SystemVar(var)
         end
     end
 
-    pcall(function()
+    RunThread(function()
         while checkgems_status do
             if GetLocal().world ~= "EXIT" then
                 Local_Gems = GetLocal().gems
@@ -490,7 +490,7 @@ function SystemVar(var)
                 end
             end
         end
-end)
+    end)
 end
 
 
