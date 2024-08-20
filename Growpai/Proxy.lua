@@ -16,7 +16,7 @@ local autoaccess_status = true
 local fastunaccess_status = false
 local autochangedl_status = false
 local fastchangebgl_status = false
-local checkgems_status = false
+local checkgems_status = true
 
 local spinchecker_status = true
 local spin_mode = "Default"
