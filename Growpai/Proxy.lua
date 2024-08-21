@@ -24,7 +24,7 @@ local spin_mode = "Default"
 ---------------------------------------
 -- Basic System
 ---------------------------------------
-function GetInventory(InventoryID)
+function GetInventoryCount(InventoryID)
     local count = 0
     for _, item in pairs(GetInventory()) do
         if item.id == InventoryID then
@@ -167,6 +167,7 @@ var[0] = "OnDialogRequest"
 var[1] = [[set_default_color|`o
 add_label_with_icon|big|`3Proxy Commands```|left|1790|
 add_textbox|]] .. version .. [[||
+add_url_button||`9Discord Server|NOFLAGS|]] .. ds_server .. [[|Go To Discord Server?|0|
 add_spacer|small|
 add_label_with_icon|small|`!Main Features:``|left|9472|
 add_smalltext|`2/proxy `9(Shows Commands)|left|
@@ -386,7 +387,7 @@ function SystemPacket(type, packet)
         return true
     end
     
-    if packet == ("action|input\n|text|/fc") then
+    if packet == ("action|input\n|text|/fc") or packet == ("action|input\n|text|/close") then
         RemoveCallbacks()
         return true
     end
@@ -400,6 +401,169 @@ function SystemPacket(type, packet)
         options()
         return true
     end
+
+    if packet == ("action|input\n|text|/relog") then
+        OnConsoleMessage(systemlog)
+        Relog_World = GetLocal().world
+        SendPacket(3, "action|quit_to_exit")
+        SendPacket(3, "action|join_request\nname|"..Relog_World.."\ninvitedWorld|0")
+        return true
+    end
+
+    -- Drops
+    if packet:find("action|input\n|text|/cd") then
+        amount = packet:gsub("action|input\n|text|/cd ", "")
+        RunThread(function()
+            bgl_count = GetInventoryCount(7188)
+            dl_count = GetInventoryCount(1796)
+            wl_count = GetInventoryCount(242)
+            total_in_wls = (bgl_count * 10000) + (dl_count * 100) + wl_count
+
+            bgl_to_drop = amount // 10000
+            dl_to_drop = amount // 100 % 100
+            wl_to_drop = amount % 100
+
+            if amount == "" then
+                OnConsoleMessage(systemlog .. "Write Amount")
+                OnTextOverlay("`9Write Amount")
+            elseif total_in_wls < amount then
+                OnConsoleMessage(systemlog .. "Not Enough Locks")
+                OnTextOverlay("`9Not Enough Locks")
+            else
+                AddCallback("Block Drop Dialog", "OnVarlist", hidedrop)
+                if dl_count < dl_to_drop then
+                    PacketRaw10(7188)
+                    if wl_count < wl_to_drop then
+                        PacketRaw10(1796)
+                        if bgl_to_drop > 0 then
+                            DropItem(7188, bgl_to_drop)
+                            Sleep(400)
+                        end
+                        if dl_to_drop > 0 then
+                            DropItem(1796, dl_to_drop)
+                            Sleep(400)
+                        end
+                        if wl_to_drop > 0 then
+                            DropItem(242, wl_to_drop)
+                            Sleep(400)
+                        end
+                        Sleep(100)
+                        OnConsoleMessage(systemlog .. "`9Dropping `2" .. dl_to_drop .. "Dls `9and `2" .. wl_to_drop .. "Wls")
+                        OnTextOverlay("`9Dropping `2" .. dl_to_drop .. "Dls `9and `2" .. wl_to_drop .. "Wls")
+                        return true
+                    else
+                        if bgl_to_drop > 0 then
+                            DropItem(7188, bgl_to_drop)
+                            Sleep(400)
+                        end
+                        if dl_to_drop > 0 then
+                            DropItem(1796, dl_to_drop)
+                            Sleep(400)
+                        end
+                        if wl_to_drop > 0 then
+                            DropItem(242, wl_to_drop)
+                            Sleep(400)
+                        end
+                        Sleep(100)
+                        OnConsoleMessage(systemlog .. "`9Dropping `2" .. dl_to_drop .. "Dls `9and `2" .. wl_to_drop .. "Wls")
+                        OnTextOverlay("`9Dropping `2" .. dl_to_drop .. "Dls `9and `2" .. wl_to_drop .. "Wls")
+                        return true
+                    end
+                elseif wl_count < wl_to_drop then
+                    PacketRaw10(1796)
+                    if bgl_to_drop > 0 then
+                        DropItem(7188, bgl_to_drop)
+                        Sleep(400)
+                    end
+                    if dl_to_drop > 0 then
+                        DropItem(1796, dl_to_drop)
+                        Sleep(400)
+                    end
+                    if wl_to_drop > 0 then
+                        DropItem(242, wl_to_drop)
+                        Sleep(400)
+                    end
+                    Sleep(100)
+                    OnConsoleMessage(systemlog .. "`9Dropping `2" .. dl_to_drop .. "Dls `9and `2" .. wl_to_drop .. "Wls")
+                    OnTextOverlay("`9Dropping `2" .. dl_to_drop .. "Dls `9and `2" .. wl_to_drop .. "Wls")
+                    return true
+                else
+                    if bgl_to_drop > 0 then
+                        DropItem(7188, bgl_to_drop)
+                        Sleep(400)
+                    end
+                    if dl_to_drop > 0 then
+                        DropItem(1796, dl_to_drop)
+                        Sleep(400)
+                    end
+                    if wl_to_drop > 0 then
+                        DropItem(242, wl_to_drop)
+                        Sleep(400)
+                    end
+                    Sleep(100)
+                    OnConsoleMessage(systemlog .. "`9Dropping `2" .. dl_to_drop .. "Dls `9and `2" .. wl_to_drop .. "Wls")
+                    OnTextOverlay("`9Dropping `2" .. dl_to_drop .. "Dls `9and `2" .. wl_to_drop .. "Wls")
+                    return true
+                end
+                RemoveCallback("Block Drop Dialog")
+            end
+        end)
+        return true
+    end
+
+    if packet:find("action|input\n|text|/dd") then
+        amount = packet:gsub("action|input\n|text|/dd ", "")
+        RunThread(function()
+            bgl_count = GetInventoryCount(7188)
+            dl_count = GetInventoryCount(1796)
+            total_in_dls = (bgl_count * 100) + dl_count
+
+            bgl_to_drop = amount // 100 % 100
+            dl_to_drop = amount % 100
+        
+            if amount == "" then
+                OnConsoleMessage(systemlog .. "Write Amount")
+                OnTextOverlay("`9Write Amount")
+            elseif total_in_dls < amount then
+                OnConsoleMessage(systemlog .. "Not Enough Diamond Locks")
+                OnTextOverlay("`9Not Enough Diamond Locks")
+            else
+                AddCallback("Block Drop Dialog", "OnVarlist", hidedrop)
+                if dl_count < dl_to_drop then
+                    PacketRaw10(7188)
+                    if bgl_to_drop > 0 then
+                        DropItem(7188, bgl_to_drop)
+                        Sleep(400)
+                    end
+                    if dl_to_drop > 0 then
+                        DropItem(1796, dl_to_drop)
+                        Sleep(400)
+                    end
+                    OnConsoleMessage(systemlog .. "`9Dropping `2" .. bgl_to_drop .. "Bgls `9and `2" .. dl_to_drop .. "Dls")
+                    OnTextOverlay("`9Dropping `2" .. bgl_to_drop .. "Bls `9and `2" .. dl_to_drop .. "Dls")
+                    return true
+                else
+                    if bgl_to_drop > 0 then
+                        DropItem(7188, bgl_to_drop)
+                        Sleep(400)
+                    end
+                    if dl_to_drop > 0 then
+                        DropItem(1796, dl_to_drop)
+                        Sleep(400)
+                    end
+                    OnConsoleMessage(systemlog .. "`9Dropping `2" .. bgl_to_drop .. "Bgls `9and `2" .. dl_to_drop .. "Dls")
+                    OnTextOverlay("`9Dropping `2" .. bgl_to_drop .. "Bls `9and `2" .. dl_to_drop .. "Dls")
+                    return true
+                end
+            end
+        end)
+        return true
+    end
+
+
+
+
+
 
     if packet == ("action|input\n|text|/spin") then
         spinchecker()
@@ -456,7 +620,7 @@ function SystemVar(var)
     -- Auto Change Diamond Lock When Lock at 150
     if autochangedl_status == true then
         if var[0] == "OnConsoleMessage" and var[1]:find("Collected") then
-            if GetInventory(242) >= 100 then
+            if GetInventoryCount(242) >= 100 then
                 PacketRaw10(242)
                 return true
             end
@@ -475,8 +639,9 @@ function SystemVar(var)
             return true
         end
     end
-
-    RunThread(function()
+    
+    -- Error Check Collected Gems
+    function CheckGems_Thread()
         while checkgems_status do
             if GetLocal().world ~= "EXIT" then
                 Local_Gems = GetLocal().gems
@@ -490,7 +655,7 @@ function SystemVar(var)
                 end
             end
         end
-    end)
+    end
 end
 
 
