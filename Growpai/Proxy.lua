@@ -37,7 +37,7 @@ local spin = {
 
 local spam = {
     status = true,
-    text = "Hello",
+    text = "Proxy By: `2Kaitsee",
     delay = 4000,
     color = false,
     emote = false,
