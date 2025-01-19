@@ -12,18 +12,44 @@ Server = "RGT" -- RGT or CPS
 ---------------------------------------
 -- Settings
 ---------------------------------------
-local autoaccess_status = true
-local fastunaccess_status = false
-local autochangedl_status = false
-local fastchangebgl_status = false
-local checkgems_status = true
+local setting = {
+    autoaccess = true,
+    fastunaccess = false,
+    autochangedl = false,
+    fastchangebgl = false,
+    checkgems = true
+}
 
-local spinchecker_status = true
-local spin_mode = "Default"
+local wrench = {
+    status = false,
+    mode = "Pull" -- Pull, Kick, Ban
+}
 
+local join = {
+    status = false,
+    mode = "Pull" -- Pull, Kick, Ban
+}
+
+local spin = {
+    status = true,
+    mode = "Default"
+}
+
+local spam = {
+    status = true,
+    text = "Hello",
+    delay = 4000,
+    color = false,
+    emote = false,
+    pulloff = false
+}
 ---------------------------------------
 -- Basic System
 ---------------------------------------
+function Chat(ChatText)
+SendPacket(2, "action|input\n|text|" .. ChatText)
+end
+
 function GetInventoryCount(InventoryID)
     local count = 0
     for _, item in pairs(GetInventory()) do
@@ -167,7 +193,6 @@ var[0] = "OnDialogRequest"
 var[1] = [[set_default_color|`o
 add_label_with_icon|big|`3Proxy Commands```|left|1790|
 add_textbox|]] .. version .. [[||
-add_url_button||`9Discord Server|NOFLAGS|]] .. ds_server .. [[|Go To Discord Server?|0|
 add_spacer|small|
 add_label_with_icon|small|`!Main Features:``|left|9472|
 add_smalltext|`2/proxy `9(Shows Commands)|left|
@@ -197,33 +222,33 @@ end
 
 function options()
 -- Auto Access
-if autoaccess_status == true then
+if setting.autoaccess == true then
     autoaccess_checkbox = 1
-elseif autoaccess_status == false then
+elseif setting.autoaccess == false then
     autoaccess_checkbox = 0
 end
 
-if fastunaccess_status == true then
+if setting.fastunaccess == true then
     fastunaccess_checkbox = 1
-elseif fastunaccess_status == false then
+elseif setting.fastunaccess == false then
     fastunaccess_checkbox = 0
 end
 
-if autochangedl_status == true then
+if setting.autochangedl == true then
     autochangedl_checkbox = 1
-elseif autochangedl_status == false then
+elseif setting.autochangedl == false then
     autochangedl_checkbox = 0
 end
 
-if fastchangebgl_status == true then
+if setting.fastchangebgl == true then
     fastchangebgl_checkbox = 1
-elseif fastchangebgl_status == false then
+elseif setting.fastchangebgl == false then
     fastchangebgl_checkbox = 0
 end
 
-if checkgems_status == true then
+if setting.checkgems == true then
     checkgems_checkbox = 1
-elseif checkgems_status == false then
+elseif setting.checkgems == false then
     checkgems_checkbox = 0
 end
 var = {}
@@ -256,24 +281,23 @@ SendVarlist(var)
 end
 
 function spinchecker()
-
-if spinchecker_status == true then
-    spinchecker_checkbox = 1
-    if spin_mode == "Default" then
+if spin.status == true then
+    spin_checkbox = 1
+    if spin.mode == "Default" then
         spinstatus_1 = "`2Enable"
         spinstatus_2 = "`9Default"
-    elseif spin_mode == "Reme" then
+    elseif spin.mode == "Reme" then
         spinstatus_1 = "`2Enable"
         spinstatus_2 = "`9Reme/Peme/Leme"
-    elseif spin_mode == "QQ" then
+    elseif spin.mode == "QQ" then
         spinstatus_1 = "`2Enable"
         spinstatus_2 = "`9QQ/Qeme"
-    elseif spin_mode == "Casino" then
+    elseif spin.mode == "Casino" then
         spinstatus_1 = "`2Enable"
         spinstatus_2 = "`9Casino"
     end
-elseif spinchecker_status == false then
-    spinchecker_checkbox = 0
+elseif spin.status == false then
+    spin_checkbox = 0
     spinstatus_1 = "`4Disable"
     spinstatus_2 = "`9-"
 end
@@ -286,7 +310,7 @@ add_spacer|small|
 add_textbox|Spin Mode Status : ]] .. spinstatus_1 .. [[||
 add_textbox|Currently Selected : ]] .. spinstatus_2 .. [[||
 add_spacer|small|
-add_checkbox|spinstatus|`2Enable `9Spin Checker|]] .. spinchecker_checkbox .. [[|
+add_checkbox|spinstatus|`2Enable `9Spin Checker|]] .. spin_checkbox .. [[|
 add_custom_margin|x:8;y:-30|
 add_custom_textbox|`#Enable or Disable Spin Checker `9(`2REAL `9or `4FAKE`9)|size:small|
 add_custom_margin|x:-8;y:0|
@@ -303,6 +327,51 @@ var.netid = -1
 SendVarlist(var)
 end
 
+function autospam()
+if spam.color == false then
+    spamcolor_checkbox = 0
+elseif spam.color == true then
+    spamcolor_checkbox = 1
+end
+if spam.emote == false then
+    spamemote_checkbox = 0
+elseif spam.emote == true then
+    spamemote_checkbox = 1
+end
+
+if spam.pulloff == false then
+    spampulloff_checkbox = 0
+elseif spam.pulloff == true then
+    spampulloff_checkbox = 1
+end
+
+var = {}
+var[0] = "OnDialogRequest"
+var[1] = [[set_default_color|`o
+add_label_with_icon|big|`9Auto Spam Settings```|left|242|
+add_spacer|small|
+add_custom_margin|x:0;y:0
+add_checkbox|spamcolor|`2Enable `9Colored Text|]].. spamcolor_checkbox .. [[|
+add_checkbox|spamemote|`9Add Emote Spamming|]].. spamemote_checkbox .. [[|
+add_checkbox|spampulloff|`4Disable `9Auto Spam When You Pull Someone|]].. spampulloff_checkbox .. [[|
+add_spacer|small|
+add_custom_margin|x:0;y:-30|
+add_text_input|spamtext|`9Spam Text :|Hello|50|
+add_custom_margin|x:8;y:0|
+add_custom_textbox|`9Insert Spam Text|size:small|
+add_custom_margin|x:-8;y:0|
+add_text_input|spamdelay|`9Interval (ms) :|4000|15|
+add_custom_margin|x:8;y:0|
+add_custom_textbox|`9Minimum Interval is 1000ms. (1000ms = 1 Seconds)|size:small|
+add_custom_textbox|`9Auto Spam Currently `4Disable|size:small|
+add_spacer|small|
+add_quick_exit|
+end_dialog|autospam|Discard Changes|Save Changes|
+]]
+
+var.netid = -1
+SendVarlist(var)
+end
 ---------------------------------------
 -- System Proxy #1
 ---------------------------------------
@@ -311,33 +380,33 @@ function SystemPacket(type, packet)
     if packet:find("dialog_name|optiondialog") then
         -- Auto Access
         if packet:find("autoaccess|0") then
-            autoaccess_status = false
+            setting.autoaccess = false
         elseif packet:find("autoaccess|1") then
-            autoaccess_status = true
+            setting.autoaccess = true
         end
 
         if packet:find("fastunaccess|0") then
-            fastunaccess_status = false
+            setting.fastunaccess = false
         elseif packet:find("fastunaccess|1") then
-            fastunaccess_status = true
+            setting.fastunaccess = true
         end
 
         if packet:find("autochangedl|0") then
-            autochangedl_status = false
+            setting.autochangedl = false
         elseif packet:find("autochangedl|1") then
-            autochangedl_status = true
+            setting.autochangedl = true
         end
         
         if packet:find("fastchangebgl|0") then
-            fastchangebgl_status = false
+            setting.fastchangebgl = false
         elseif packet:find("fastchangebgl|1") then
-            fastchangebgl_status = true
+            setting.fastchangebgl = true
         end
 
         if packet:find("checkgems|0") then
-            checkgems_status = false
+            setting.checkgems = false
         elseif packet:find("checkgems|1") then
-            checkgems_status = true
+            setting.checkgems = true
         end
 
         --- Batas
@@ -349,20 +418,20 @@ function SystemPacket(type, packet)
     if packet:find("dialog_name|spinchecker") then
         -- Checkbox
         if packet:find("spinstatus|0") then
-            spinchecker_status = false
+            spin.status = false
         elseif packet:find("spinstatus|1") then
-            spinchecker_status = true
+            spin.status = true
             if packet:find("buttonClicked|spindefault") then
-                spin_mode = "Default"
+                spin.mode = "Default"
                 OnTextOverlay("`9Spin Checker Reset To `2Default")
             elseif packet:find("buttonClicked|spinreme") then
-                spin_mode = "Reme"
+                spin.mode = "Reme"
                 OnTextOverlay("`9Spin Checker Mode Set To: `2Reme/Peme/Leme")
             elseif packet:find("buttonClicked|spinqq") then
-                spin_mode = "QQ"
+                spin.mode = "QQ"
                 OnTextOverlay("`9Spin Checker Mode Set To: `2QQ/Qeme")
             elseif packet:find("buttonClicked|spincsn") then
-                spin_mode = "Casino"
+                spin.mode = "Casino"
                 OnTextOverlay("`9Spin Checker Mode Set To: `2Casino")
             end
         end
@@ -372,6 +441,33 @@ function SystemPacket(type, packet)
         end)
     end
 
+    -- Auto Spam
+    if spam.pulloff == true then
+        if packet:find("buttonClicked|pull") or packet:find("/pull") and spam.status == true then
+            spam.status = false
+        end
+    end
+    
+    if packet:find("dialog_name|autospam") then
+        if packet:find("spamcolor|0") then
+            spam.color = true
+        elseif packet:find("spamcolor|1") then
+            spam.color = true
+        end
+        if packet:find("spamemote|0") then
+            spam.emote = true
+        elseif packet:find("spamemote|1") then
+            spam.emote = true
+        end
+        if packet:find("spampulloff|0") then
+            spam.pulloff = true
+        elseif packet:find("spampulloff|1") then
+            spam.pulloff = true
+        end
+
+        spam.text = packet:gsub("spamtext|(.)\n")
+        spam.delay = packet:gsub("spamdelay|(%d+)\n")
+    end
     --- Buttons
     if packet:find("dialog_name|selectserver") then
         if packet:find("buttonClicked|rgt") then
@@ -408,6 +504,13 @@ function SystemPacket(type, packet)
         SendPacket(3, "action|quit_to_exit")
         SendPacket(3, "action|join_request\nname|"..Relog_World.."\ninvitedWorld|0")
         return true
+    end
+
+    if packet == ("action|input\n|text|/bal") or packet == ("action|input\n|text|/balance") then
+        AmountBGL = GetInventoryCount(7188)
+        AmountDL = GetInventoryCount(1796)
+        AmountWL = GetInventoryCount(242)
+        OnConsoleMessage("")
     end
 
     -- Drops
@@ -559,9 +662,7 @@ function SystemPacket(type, packet)
         end)
         return true
     end
-
-
-
+        
 
 
 
@@ -570,12 +671,16 @@ function SystemPacket(type, packet)
         return true
     end
 
+    if packet:find("action|input\n|text|/spam") then
+        autospam()
+        return true
+    end
     if packet == ("action|input\n|text|/cgems") then
-        if checkgems_status == false then
-            checkgems_status = true
+        if setting.checkgems == false then
+            setting.checkgems = true
             OnConsoleMessage(systemlog .. "Check Collected Gems `2Enabled")
-        elseif checkgems_status == true then
-            checkgems_status = false
+        elseif setting.checkgems == true then
+            setting.checkgems = false
             OnConsoleMessage(systemlog .. "Check Collected Gems `4Disabled")
         end
         return true
@@ -585,9 +690,9 @@ end
 ---------------------------------------
 -- Proxy System #2 (Variant List)
 ---------------------------------------
-function SystemVar(var)
+function SystemProxy(var)
     -- Auto Access
-    if autoaccess_status == true then
+    if setting.autoaccess == true then
         if var[0] == "OnConsoleMessage" and var[1]:find("wants to add you to a") then
             AddCallback("Block Dialog", "OnVarlist", hidealldialog)
             RunThread(function()
@@ -605,7 +710,7 @@ function SystemVar(var)
     end
 
     -- Fast Un-Access When Wrench Any Lock
-    if fastunaccess_status == true then
+    if setting.fastunaccess == true then
         if var[0] == "OnDialogRequest" and var[1]:find("but I have access on it.") then
             AddCallback("Block Dialog", "OnVarlist", hidealldialog)
             RunThread(function()
@@ -618,7 +723,7 @@ function SystemVar(var)
     end
 
     -- Auto Change Diamond Lock When Lock at 150
-    if autochangedl_status == true then
+    if setting.autochangedl == true then
         if var[0] == "OnConsoleMessage" and var[1]:find("Collected") then
             if GetInventoryCount(242) >= 100 then
                 PacketRaw10(242)
@@ -627,8 +732,44 @@ function SystemVar(var)
         end
     end
 
+    -- Spam
+    if spam.status == true then
+        ChatColor = {"`1", "`2", "`3", "`4", "`5", "`6", "`7", "`8", "`9", "`0", "`!", "`@", "`#", "`$", "`^", "`&", "`w", "`o", "`p", "`b", "`q", "`e", "`r", "`t", "`a", "`s", "`c"}
+        ChatEmote = {"/smile", "/cry", "/laugh", "/mad", "/wave", "/dance", "/love", "/sleep", "/yes", "/no", "/wink", "/troll", "/cheer", "/sad", "/fp", "/omg", "/shrug", "/furious", "/rolleyes", "/foldarms", "/dab", "/sassy", "/dance2", "/smh", "/march", "/shy", "/grumpy"}
+        if spam.color == true then
+            if spam.emote == true then
+                Chat(ChatColor[math.random(1, #ChatColor)] .. spam.text)
+                Sleep(400)
+                Chat(ChatEmote[math.random(1, #ChatEmote)])
+                Sleep(spam.delay)
+            elseif spam.emote == false then
+                Chat(ChatColor[math.random(1, #ChatColor)] .. spam.text)
+                Sleep(spam.delay)
+            else
+                Chat(spam.text)
+                Sleep(spam.delay)
+            end
+        elseif spam.color == false then
+            if spam.emote == true then
+                Chat(spam.text)
+                Sleep(400)
+                Chat(ChatEmote[math.random(1, #ChatEmote)])
+                Sleep(spam.delay)
+            elseif spam.emote == false then
+                Chat(spam.text)
+                Sleep(spam.delay)
+            else
+                Chat(spam.text)
+                Sleep(spam.delay)
+            end
+        else
+            Chat(spam.text)
+            Sleep(spam.delay)
+        end
+    end
+
     -- Fast Changes BGL When Wrench Any Telephone
-    if fastchangebgl_status == true then
+    if setting.fastchangebgl == true then
         if var[0]:find("OnDialogRequest") and var[1]:find("Dial a number to call somebody in Growtopia") then
             AddCallback("Block Telephone", "OnVarlist", hidetelephone)
             RunThread(function()
@@ -642,7 +783,7 @@ function SystemVar(var)
     
     -- Error Check Collected Gems
     function CheckGems_Thread()
-        while checkgems_status do
+        while setting.checkgems do
             if GetLocal().world ~= "EXIT" then
                 Local_Gems = GetLocal().gems
                 Sleep(1000)
@@ -667,7 +808,7 @@ OnTextOverlay("`1I`2n`3j`4e`5c`6t`7i`8n`9g`0..")
 Sleep(1000)
 AddCallback("System Proxy #1", "OnPacket", SystemPacket)
 Sleep(500)
-AddCallback("System Proxy #2", "OnVarlist", SystemVar)
+AddCallback("System Proxy #2", "OnVarlist", SystemProxy)
 OnConsoleMessage(systemlog .. "Proxy Injected")
 OnTextOverlay("`2Successfully Injected")
 Sleep(1000)
