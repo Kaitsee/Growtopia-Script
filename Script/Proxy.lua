@@ -662,8 +662,6 @@ function SystemPacket(type, packet)
         end)
         return true
     end
-        
-
 
 
     if packet == ("action|input\n|text|/spin") then
